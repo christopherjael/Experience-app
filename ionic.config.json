@@ -1,0 +1,7 @@
+{
+  "name": "MultiApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
