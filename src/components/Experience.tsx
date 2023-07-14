@@ -6,14 +6,15 @@ import {
   IonCardTitle,
   IonCardContent,
 } from '@ionic/react';
+import ExperienceModel from '../model/ExperienceModel';
 
-interface TaskProps {
-  id: string;
-  title: string;
-  description: string;
-}
-
-const Experience: React.FC<TaskProps> = ({ id, title, description }) => (
+const Experience: React.FC<ExperienceModel> = ({
+  id,
+  title,
+  description,
+  photo,
+  audio,
+}) => (
   <IonCard>
     <IonCardHeader>
       <IonCardSubtitle>Task ID: {id}</IonCardSubtitle>

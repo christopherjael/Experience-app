@@ -20,6 +20,9 @@ import {
   IonDatetime,
   IonDatetimeButton,
   IonTextarea,
+  IonGrid,
+  IonCol,
+  IonRow,
 } from '@ionic/react';
 import Experience from '../components/Experience';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,9 +34,13 @@ import {
   add,
   trash,
   create,
+  cameraSharp,
+  musicalNoteSharp,
+  micCircle,
 } from 'ionicons/icons';
 import DataTable from 'react-data-table-component';
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
+import { usePhotoGallery } from '../hook/usePhotoGallery';
 
 interface TaskItem {
   id: string;
@@ -48,6 +55,8 @@ interface User {
 }
 
 const HomePage: React.FC = () => {
+  /* Media Capture */
+  const { deletePhoto, photos, takePhoto } = usePhotoGallery();
   //ExperienceModal
   const [isOpen, setIsOpen] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
@@ -91,49 +100,7 @@ const HomePage: React.FC = () => {
 
   const handleDateChange = (event: CustomEvent) => {
     setSelectedDate(event.detail.value);
-  };
-
-  const [data, setData] = useState<User[]>([
-    { id: 1, name: 'John Doe', age: 28 },
-    { id: 2, name: 'Jane Smith', age: 32 },
-    { id: 3, name: 'Bob Johnson', age: 45 },
-  ]);
-
-  const columns = [
-    { name: 'Name', selector: 'name' },
-    { name: 'Age', selector: 'age' },
-    {
-      name: 'Acctions',
-      cell: (row: User) => (
-        <>
-          <IonButton
-            size="small"
-            color="danger"
-            onClick={() => handleDelete(row.id)}
-          >
-            <IonIcon slot="start" icon={trash} />
-            Delete
-          </IonButton>
-          <IonButton
-            size="small"
-            color="primary"
-            onClick={() => handleEdit(row.id)}
-          >
-            <IonIcon slot="start" icon={create} />
-            Edit
-          </IonButton>
-        </>
-      ),
-    },
-  ];
-
-  const handleDelete = (id: number) => {
-    const updatedData = data.filter((user) => user.id !== id);
-    setData(updatedData);
-  };
-
-  const handleEdit = (id: number) => {
-    // Implementa la lógica de edición aquí
+    console.log(selectedDate);
   };
 
   return (
@@ -155,7 +122,7 @@ const HomePage: React.FC = () => {
             />
           ))}
         </IonList>
-        <DataTable columns={columns} data={data} />
+        {/* Experience list */}
         {/* Floting Botom */}
         <IonFab
           vertical="bottom"
@@ -179,36 +146,66 @@ const HomePage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          <IonItem>
-            <IonLabel position="stacked">Title</IonLabel>
-            <IonInput ref={input} type="text" placeholder="Enter title" />
-          </IonItem>
-          <IonItemDivider />
-          <IonItem>
-            <IonTextarea
-              label="Description"
-              labelPlacement="stacked"
-              placeholder="Enter description"
-            ></IonTextarea>
-          </IonItem>
-          <IonItemDivider />
-          <IonItem>
-            <p>Date: </p>
-            <IonDatetimeButton
-              datetime="date"
-              datatype="date"
-            ></IonDatetimeButton>
+          <form action="" id="form-experience">
+            <IonItem>
+              <IonLabel position="stacked">Title</IonLabel>
+              <IonInput
+                required
+                ref={input}
+                type="text"
+                placeholder="Enter title"
+              />
+            </IonItem>
+            <IonItemDivider />
+            <IonItem>
+              <IonTextarea
+                required
+                label="Description"
+                labelPlacement="stacked"
+                placeholder="Enter description"
+              ></IonTextarea>
+            </IonItem>
+            <IonItemDivider />
+            <IonItem>
+              <p>Date: </p>
 
-            <IonModal keepContentsMounted={true}>
-              <IonDatetime id="date"></IonDatetime>
-            </IonModal>
-          </IonItem>
-          <IonItemDivider />
+              <IonDatetimeButton
+                datetime="date"
+                datatype="date"
+              ></IonDatetimeButton>
 
-          <IonButton expand="block">
-            <IonIcon icon={add} />
-            Create Experience
-          </IonButton>
+              <IonModal keepContentsMounted={true}>
+                <IonDatetime
+                  onIonChange={handleDateChange}
+                  id="date"
+                ></IonDatetime>
+              </IonModal>
+            </IonItem>
+            <IonItemDivider />
+            <IonItem>
+              <IonGrid>
+                <IonRow>
+                  <IonCol>
+                    <IonButton expand="block" onClick={takePhoto}>
+                      <IonIcon icon={cameraSharp} />
+                      Take photo
+                    </IonButton>
+                  </IonCol>
+                  <IonCol>
+                    <IonButton expand="block">
+                      <IonIcon icon={micCircle} />
+                      Record Audio
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonItem>
+            <IonItemDivider />
+            <IonButton expand="block" type="submit">
+              <IonIcon icon={add} />
+              Create Experience
+            </IonButton>
+          </form>
         </IonContent>
       </IonModal>
     </IonApp>
